@@ -1,0 +1,62 @@
+﻿<# 
+.SYNOPSIS
+<Steps to Extract AutopilotConfigurationFile.json to perform offline device registration>
+#>
+
+<# 
+.NOTES
+Author:          Microsoft
+
+MS Link :-       https://learn.microsoft.com/en-us/autopilot/existing-devices
+
+Find video Author on 
+Youtube:-        https://www.youtube.com/@chandermanipandey8763
+Twitter:-        https://twitter.com/Mani_CMPandey
+Facebook:-       https://www.facebook.com/profile.php?id=100087275409143&mibextid=ZbWKwL
+LinkedIn:-       https://www.linkedin.com/in/chandermanipandey
+Reddit:-         https://www.reddit.com/u/ChanderManiPandey 
+#>
+
+#Step 1 
+
+Set-ExecutionPolicy -ExecutionPolicy Bypass
+
+
+#Step 2 Commands to install the necessary modules
+
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+Install-Module WindowsAutopilotIntune -MinimumVersion 5.4.0 -Force
+Install-Module Microsoft.Graph.Groups -Force
+Install-Module Microsoft.Graph.Authentication -Force
+Install-Module Microsoft.Graph.Identity.DirectoryManagement -Force
+
+
+#Step 3 Commands to import the necessary modules
+
+Import-Module WindowsAutopilotIntune -MinimumVersion 5.4
+Import-Module Microsoft.Graph.Groups
+Import-Module Microsoft.Graph.Authentication
+Import-Module Microsoft.Graph.Identity.DirectoryManagement
+
+
+#Step 4 Connect MgGraph and provide Intune administrative credentials
+
+Connect-MgGraph -Scopes "Device.ReadWrite.All", "DeviceManagementManagedDevices.ReadWrite.All", "DeviceManagementServiceConfig.ReadWrite.All", "Domain.ReadWrite.All", "Group.ReadWrite.All", "GroupMember.ReadWrite.All", "User.Read"
+
+#Step 5 Get all the Autopilot profiles available in your Intune tenant, and display them in JSON format
+
+Get-AutopilotProfile | ConvertTo-AutopilotConfigurationJSON
+
+#Step 6 Create the JSON file and store in C:\Autopilot folder
+Connect-MgGraph -Scopes "Device.ReadWrite.All", "DeviceManagementManagedDevices.ReadWrite.All", "DeviceManagementServiceConfig.ReadWrite.All", "Domain.ReadWrite.All", "Group.ReadWrite.All", "GroupMember.ReadWrite.All", "User.Read"
+$AutopilotProfile = Get-AutopilotProfile
+$targetDirectory = "C:\Autopilot"
+$AutopilotProfile | ForEach-Object {
+    New-Item -ItemType Directory -Path "$targetDirectory\$($_.displayName)"
+    $_ | ConvertTo-AutopilotConfigurationJSON | Set-Content -Encoding Ascii "$targetDirectory\$($_.displayName)\AutopilotConfigurationFile.json"
+}
+
+
+#Step 7 Copy AutopilotConfigurationFile.json from "C:\Autopilot\AutopilotConfigurationFile.json" to "C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json"
+
+#Step 8 Delete the "C:\AutopilotConfigurationFile.json" folder as not not required.
