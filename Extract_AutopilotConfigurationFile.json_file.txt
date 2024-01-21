@@ -1,6 +1,6 @@
 ﻿<# 
 .SYNOPSIS
-<Steps to Extract AutopilotConfigurationFile.json to perform offline device registration>
+< Steps to Extract AutopilotConfigurationFile.json >
 #>
 
 <# 
