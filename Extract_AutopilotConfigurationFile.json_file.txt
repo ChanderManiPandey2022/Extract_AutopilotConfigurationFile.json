@@ -57,4 +57,4 @@ $AutopilotProfile | ForEach-Object {
 
 #Step 7 Copy AutopilotConfigurationFile.json from "C:\Autopilot\AutopilotConfigurationFile.json" to "C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json"
 
-#Step 8 Delete the "C:\AutopilotConfigurationFile.json" folder as not not required.
+#Step 8 Delete the "C:\AutopilotConfigurationFile.json" folder as its not required.
